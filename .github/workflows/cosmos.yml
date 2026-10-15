@@ -1,0 +1,39 @@
+name: Generate Commit Cosmos
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Запуск каждый день в 00:00 UTC
+  workflow_dispatch:     # Позволяет запускать вручную кнопкой в браузере
+
+permissions:
+  contents: write        # Разрешаем боту сохранять готовую картинку в репозиторий
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate SVG
+        env:
+          GITHUB_USER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python generate_cosmos.py
+
+      - name: Push SVG to output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: .
+          files: cosmos.svg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
