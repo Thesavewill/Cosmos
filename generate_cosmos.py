@@ -146,9 +146,10 @@ def generate_svg():
     svg.append(f'<circle cx="{cx}" cy="{cy}" r="50" class="planet-border" />')
     svg.append('</svg>')
 
-    with open("cosmos.svg", "w", encoding="utf-8") as f:
+    os.makedirs("dist", exist_ok=True)
+    with open("dist/cosmos.svg", "w", encoding="utf-8") as f:
         f.write("\n".join(svg))
-    print("Файл cosmos.svg успешно создан!")
+    print("Файл dist/cosmos.svg успешно создан!")
 
 if __name__ == "__main__":
     generate_svg()
